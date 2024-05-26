@@ -12,23 +12,41 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    services:
-      localstack:
-        image: localstack/localstack
-        ports:
-          - 4566:4566
-        options: -e SERVICES=s3 -e DEFAULT_REGION=us-east-1
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
+    - name: Check Docker
+      run: |
+        echo "Checking Docker..."
+        docker --version
+        if [ $? -ne 0 ]; then
+          echo "Docker is not installed or not found in PATH."
+          exit 1
+        fi
+
+    - name: Check curl
+      run: |
+        echo "Checking curl..."
+        curl --version
+        if [ $? -ne 0 ]; then
+          echo "curl is not installed or not found in PATH."
+          exit 1
+        fi
+
+    - name: Start LocalStack
+      run: |
+        echo "Starting LocalStack..."
+        docker run -d -e SERVICES=s3 -e DEFAULT_REGION=us-east-1 -p 4566:4566 localstack/localstack
 
     - name: Wait for LocalStack to be ready
       run: |
         echo "Waiting for LocalStack to be ready..."
         until curl -s http://localhost:4566/_localstack/health | grep "\"s3\": \"running\""; do
+          echo "LocalStack is not ready yet. Sleeping for 5 seconds..."
           sleep 5
         done
+        echo "LocalStack is ready."
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
