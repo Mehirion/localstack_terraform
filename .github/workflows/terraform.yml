@@ -42,11 +42,6 @@ jobs:
     - name: List Docker containers
       run: docker ps -a
 
-    - name: Print LocalStack Logs
-      run: |
-          echo "Printing LocalStack logs for debugging..."
-          docker logs localstack_main
-
     - name: Wait for LocalStack to be ready
       run: |
         echo "Waiting for LocalStack to be ready..."
