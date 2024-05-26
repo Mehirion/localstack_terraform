@@ -1,11 +1,5 @@
 variable "bucket_name" {
-  description = "Nazwa bucketu S3"
+  description = "The name of the S3 bucket"
   type        = string
-  default     = "example-bucket"
-}
-
-variable "environment" {
-  description = "Środowisko dla tego bucketu S3"
-  type        = string
-  default     = "development"
+  default     = "my-test-bucket"
 }
