@@ -39,19 +39,14 @@ jobs:
         echo "Starting LocalStack..."
         docker run -d -e SERVICES=s3 -e DEFAULT_REGION=us-east-1 -p 4566:4566 localstack/localstack
         
+    - name: List Docker containers
+      run: docker ps -a
+
     - name: Print LocalStack Logs
       run: |
           echo "Printing LocalStack logs for debugging..."
           docker logs localstack_main
 
-    - name: Wait for LocalStack to be ready
-      run: |
-        echo "Waiting for LocalStack to be ready..."
-        until curl -s http://localhost:4566/_localstack/health | grep "\"s3\": \"running\""; do
-          echo "LocalStack is not ready yet. Sleeping for 5 seconds..."
-          sleep 5
-        done
-        echo "LocalStack is ready."
     - name: Wait for LocalStack to be ready
       run: |
         echo "Waiting for LocalStack to be ready..."
