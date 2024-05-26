@@ -64,3 +64,11 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main'
       run: terraform apply -auto-approve
+      
+    - name: Stop LocalStack
+      if: always()
+      run: docker stop localstack
+
+    - name: Remove LocalStack container
+      if: always()
+      run: docker rm localstack
