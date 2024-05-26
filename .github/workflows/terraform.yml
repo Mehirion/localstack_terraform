@@ -17,7 +17,7 @@ jobs:
         image: localstack/localstack
         ports:
           - 4566:4566
-        options: --entrypoint= -e DEFAULT_REGION=us-east-1
+        options: --network-alias localstack -e SERVICES=s3 -e DEFAULT_REGION=us-east-1
 
     steps:
     - name: Checkout repository
@@ -25,6 +25,7 @@ jobs:
 
     - name: Wait for LocalStack
       run: |
+        echo "Waiting for LocalStack to be ready..."
         until curl -s http://localhost:4566/_localstack/health | grep "\"s3\": \"running\""; do
           sleep 5
         done
