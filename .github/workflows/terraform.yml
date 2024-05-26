@@ -12,13 +12,6 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    services:
-      localstack:
-        image: localstack/localstack
-        ports:
-          - 4566:4566
-        options: -e SERVICES=s3 -e DEFAULT_REGION=us-east-1
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -44,7 +37,7 @@ jobs:
     - name: Start LocalStack
       run: |
         echo "Starting LocalStack..."
-        docker run -d --name localstack_main -e SERVICES=s3 -e DEFAULT_REGION=us-east-1 -p 4566:4566 localstack/localstack
+        docker run -d -e SERVICES=s3 -e DEFAULT_REGION=us-east-1 -p 4566:4566 localstack/localstack
 
     - name: Wait for LocalStack to be ready
       run: |
@@ -54,11 +47,6 @@ jobs:
           sleep 5
         done
         echo "LocalStack is ready."
-
-    - name: Print LocalStack Logs
-      run: |
-        echo "Printing LocalStack logs for debugging..."
-        docker logs localstack_main
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
